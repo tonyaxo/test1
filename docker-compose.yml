@@ -1,0 +1,27 @@
+version: '3'
+services:
+  web:
+      image: nginx:latest
+      depends_on:
+          - mysql
+      ports:
+          - "127.0.0.5:80:80"
+      volumes:
+          - .:/var/www/app
+          - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      links:
+          - php
+  php:
+      build: ./docker/php
+      depends_on:
+          - mysql
+      volumes:
+          - .:/var/www/app
+      links:
+          - mysql
+  mysql:
+      image: mysql:5.7
+      ports:
+          - "127.0.0.5:3306:3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: YOUR_PASSWORD
